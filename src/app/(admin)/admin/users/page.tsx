@@ -273,7 +273,7 @@ export default function AdminUsersPage() {
       const isDeposit = txnForm.transactionType === "deposit";
       const isFromBalance = txnForm.method === "balance";
       const isCredit = ["bonus", "referral"].includes(txnForm.transactionType) || (isDeposit && !isFromBalance);
-      const isDebit = txnForm.transactionType === "withdrawal" || (isDeposit && isFromBalance);
+      const isDebit = ["withdrawal", "reduction"].includes(txnForm.transactionType) || (isDeposit && isFromBalance);
       setUsers((prev) =>
         prev.map((u) =>
           u.username === createTxnUser.username
@@ -1037,6 +1037,7 @@ export default function AdminUsersPage() {
                   <option value="deposit">Deposit</option>
                   <option value="withdrawal">Withdrawal</option>
                   <option value="bonus">Bonus</option>
+                  <option value="reduction">Reduction</option>
                 </select>
               </div>
               {/* Plan — only for deposit */}
