@@ -11,6 +11,6 @@ cp -r public .next/standalone/
 cp -r .next/static .next/standalone/.next/
 
 # Restart/Start standalone server using PM2
-pm2 restart "ycapricorn-web" || pm2 start .next/standalone/server.js --name "ycapricorn-web"
+pm2 restart "ycapricon-web" || pm2 start .next/standalone/server.js --name "ycapricon-web"
 
 echo "Youngcap Web deployed successfully!"
