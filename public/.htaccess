@@ -1,0 +1,28 @@
+# ------------------------------------------------------------------------------
+# CAPRICORN ENERGY LTD - Apache Web Server Routing Configuration (.htaccess)
+# Designed for Next.js Static HTML Exports (output: 'export')
+# ------------------------------------------------------------------------------
+
+# Disable directory indexing (Prevents 403 Forbidden on Directory Slashes)
+Options -Indexes
+
+# Enable runtime URL rewriting
+RewriteEngine On
+RewriteBase /
+
+# Prevent Apache from forcing trailing slashes on folders that match route names
+DirectorySlash Off
+
+# 1. Resolve directory slash conflict: Serve the parent page if a corresponding .html exists
+# E.g. /admin/transactions/ or /admin/transactions -> serves /admin/transactions.html
+RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+RewriteRule ^([^/]+(?:/[^/]+)*)/?$ $1.html [L]
+
+# 2. Fallback check for clean URLs (E.g. /about -> /about.html)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.*)$ $1.html [L]
+
+# 3. Dynamic Custom 404 Routing
+ErrorDocument 404 /404.html
