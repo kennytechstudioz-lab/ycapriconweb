@@ -19,6 +19,7 @@ interface UserProfile {
   dateOfBirth: string;
   gender: string;
   maritalStatus: string;
+  phoneNumber: string;
   country: string;
   occupation: string;
   idType: string;
@@ -1194,6 +1195,10 @@ export default function AdminUsersPage() {
                     <div className="flex flex-col gap-1">
                       <span className="text-[10px] text-neutral-500 uppercase font-extrabold">Marital Status</span>
                       <span className="text-white font-semibold">{verifUser.maritalStatus || "—"}</span>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-[10px] text-neutral-500 uppercase font-extrabold">Phone Number</span>
+                      <span className="text-white font-semibold">{verifUser.phoneNumber || "—"}</span>
                     </div>
                     <div className="flex flex-col gap-1">
                       <span className="text-[10px] text-neutral-500 uppercase font-extrabold">Country</span>

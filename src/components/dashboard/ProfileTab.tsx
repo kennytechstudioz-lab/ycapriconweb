@@ -45,6 +45,7 @@ export function ProfileTab() {
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [gender, setGender] = useState("");
   const [maritalStatus, setMaritalStatus] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [country, setCountry] = useState("");
   const [occupation, setOccupation] = useState("");
   const [idType, setIdType] = useState("");
@@ -75,6 +76,7 @@ export function ProfileTab() {
       
       setGender(profile.gender || "");
       setMaritalStatus(profile.maritalStatus || "");
+      setPhoneNumber(profile.phoneNumber || "");
       setCountry(profile.country || "");
       setOccupation(profile.occupation || "");
       setIdType((profile as any).idType || "");
@@ -119,7 +121,7 @@ export function ProfileTab() {
     e.preventDefault();
     if (!username) return;
 
-    if (!firstName || !lastName || !dateOfBirth || !gender || !maritalStatus || !country || !occupation || !idType || !idImage) {
+    if (!firstName || !lastName || !dateOfBirth || !gender || !maritalStatus || !phoneNumber || !country || !occupation || !idType || !idImage) {
       showToast("Please fill in all verification fields including ID type and ID document.", "warning");
       return;
     }
@@ -140,6 +142,7 @@ export function ProfileTab() {
       dateOfBirth,
       gender,
       maritalStatus,
+      phoneNumber,
       country,
       occupation,
       idType,
@@ -392,16 +395,29 @@ export function ProfileTab() {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm uppercase text-neutral-400 font-extrabold tracking-wider">Occupation</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Energy Infrastructure Architect"
-                  value={occupation}
-                  onChange={(e) => setOccupation(e.target.value)}
-                  className="bg-neutral-950 border border-neutral-900 p-2.5 rounded text-white focus:outline-none focus:border-[#e4c126] font-medium text-sm"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-sm uppercase text-neutral-400 font-extrabold tracking-wider">Phone Number</label>
+                  <input
+                    type="tel"
+                    required
+                    placeholder="+1 (555) 000-0000"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    className="bg-neutral-950 border border-neutral-900 p-2.5 rounded text-white focus:outline-none focus:border-[#e4c126] font-medium text-sm"
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-sm uppercase text-neutral-400 font-extrabold tracking-wider">Occupation</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Energy Infrastructure Architect"
+                    value={occupation}
+                    onChange={(e) => setOccupation(e.target.value)}
+                    className="bg-neutral-950 border border-neutral-900 p-2.5 rounded text-white focus:outline-none focus:border-[#e4c126] font-medium text-sm"
+                  />
+                </div>
               </div>
 
               <div className="flex flex-col gap-1.5">

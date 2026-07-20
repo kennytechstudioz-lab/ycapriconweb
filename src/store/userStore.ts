@@ -15,6 +15,7 @@ export interface UserProfile {
   dateOfBirth: string;
   gender: string;
   maritalStatus: string;
+  phoneNumber: string;
   country: string;
   occupation: string;
   isVerifying: boolean;
