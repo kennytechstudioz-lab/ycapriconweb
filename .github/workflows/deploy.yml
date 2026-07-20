@@ -18,8 +18,9 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-
-            cd /var/www/projects/investment/capricorn/web
-
-            bash deploy.sh
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            export PATH=$PATH:/usr/local/bin:/usr/bin
+            cd /var/www/projects/investment/ycapricon/web
+            git fetch origin main
+            git reset --hard origin/main
+            bash /var/www/projects/investment/ycapricon/web/deploy.sh
