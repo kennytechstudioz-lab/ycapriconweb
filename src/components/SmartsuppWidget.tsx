@@ -3,6 +3,8 @@
 import Script from "next/script";
 
 export default function SmartsuppWidget() {
+  return null;
+  /*
   return (
     <>
       <Script id="smartsupp-init" strategy="afterInteractive">
@@ -19,4 +21,5 @@ export default function SmartsuppWidget() {
       </Script>
     </>
   );
+  */
 }
