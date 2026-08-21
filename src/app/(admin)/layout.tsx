@@ -21,7 +21,16 @@ export default function AdminLayout({
 
   useEffect(() => {
     setIsSidebarOpen(false);
+    if (typeof window !== "undefined" && typeof (window as any).smartsupp === "function") {
+      (window as any).smartsupp("chat:hide");
+    }
   }, [pathname]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && typeof (window as any).smartsupp === "function") {
+      (window as any).smartsupp("chat:hide");
+    }
+  }, []);
 
   useEffect(() => {
     setIsHydrated(useAuthStore.persist.hasHydrated());
