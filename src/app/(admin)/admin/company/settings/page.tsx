@@ -40,11 +40,11 @@ export default function AdminSettingsPage() {
     const loadSettings = async () => {
       const res = await fetchSettings();
       if (res.success && res.setting) {
-        setCompanyName(res.setting.companyName);
-        setDomainName(res.setting.domainName);
-        setEmail(res.setting.email);
-        setPhone(res.setting.phone);
-        setAddress(res.setting.address);
+        setCompanyName(res.setting.companyName || "");
+        setDomainName(res.setting.domainName || "");
+        setEmail(res.setting.email || "");
+        setPhone(res.setting.phone || "");
+        setAddress(res.setting.address || "");
         setDescription(res.setting.description || "");
         setShowCurrency(res.setting.showCurrency ?? false);
         setRegistrationLink(res.setting.registrationLink || "");
@@ -67,11 +67,6 @@ export default function AdminSettingsPage() {
     e.preventDefault();
     setFormError(null);
     setFormSuccess(false);
-
-    if (!companyName || !domainName || !email || !phone || !address || !description) {
-      setFormError("Please fill out all required configuration fields.");
-      return;
-    }
 
     setIsSubmitting(true);
 
@@ -106,7 +101,7 @@ export default function AdminSettingsPage() {
       registrationLink: registrationLink.trim(),
       mapEmbed: mapEmbed.trim(),
       documents: allDocs,
-    } as any);
+    });
 
     setIsSubmitting(false);
 
@@ -168,28 +163,28 @@ export default function AdminSettingsPage() {
               <h3 className="text-xs font-black uppercase tracking-widest text-[#e4c126] pb-2 border-b border-neutral-800/80">Corporate Branding & Support Channels</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] text-neutral-400 font-extrabold uppercase tracking-wider">Company Name *</label>
-                  <input type="text" required value={companyName} onChange={(e) => setCompanyName(e.target.value)} className={inputCls} placeholder="Capricorn Energy" />
+                  <label className="text-[10px] text-neutral-400 font-extrabold uppercase tracking-wider">Company Name</label>
+                  <input type="text" value={companyName} onChange={(e) => setCompanyName(e.target.value)} className={inputCls} placeholder="Capricorn Energy" />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] text-neutral-400 font-extrabold uppercase tracking-wider">Domain Name *</label>
-                  <input type="text" required value={domainName} onChange={(e) => setDomainName(e.target.value)} className={inputCls} placeholder="capricorn.com" />
+                  <label className="text-[10px] text-neutral-400 font-extrabold uppercase tracking-wider">Domain Name</label>
+                  <input type="text" value={domainName} onChange={(e) => setDomainName(e.target.value)} className={inputCls} placeholder="capricorn.com" />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] text-neutral-400 font-extrabold uppercase tracking-wider">Support Email Address *</label>
-                  <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className={inputCls} placeholder="support@capricorn.com" />
+                  <label className="text-[10px] text-neutral-400 font-extrabold uppercase tracking-wider">Support Email Address</label>
+                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className={inputCls} placeholder="support@capricorn.com" />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] text-neutral-400 font-extrabold uppercase tracking-wider">Contact Phone Line *</label>
-                  <input type="text" required value={phone} onChange={(e) => setPhone(e.target.value)} className={inputCls} placeholder="+1234567890" />
+                  <label className="text-[10px] text-neutral-400 font-extrabold uppercase tracking-wider">Contact Phone Line</label>
+                  <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} className={inputCls} placeholder="+1234567890" />
                 </div>
                 <div className="flex flex-col gap-1.5 lg:col-span-2">
-                  <label className="text-[10px] text-neutral-400 font-extrabold uppercase tracking-wider">Physical Address *</label>
-                  <input type="text" required value={address} onChange={(e) => setAddress(e.target.value)} className={inputCls} placeholder="123 Solar Street, Green City" />
+                  <label className="text-[10px] text-neutral-400 font-extrabold uppercase tracking-wider">Physical Address</label>
+                  <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} className={inputCls} placeholder="123 Solar Street, Green City" />
                 </div>
                 <div className="flex flex-col gap-1.5 lg:col-span-3">
-                  <label className="text-[10px] text-neutral-400 font-extrabold uppercase tracking-wider">Company Small Description *</label>
-                  <textarea required rows={3} value={description} onChange={(e) => setDescription(e.target.value)} className={`${inputCls} resize-none`} placeholder="Capricorn Energy is a global leader in clean-energy investments..." />
+                  <label className="text-[10px] text-neutral-400 font-extrabold uppercase tracking-wider">Company Description</label>
+                  <textarea rows={3} value={description} onChange={(e) => setDescription(e.target.value)} className={`${inputCls} resize-none`} placeholder="Capricorn Energy is a global leader in clean-energy investments..." />
                 </div>
               </div>
             </div>

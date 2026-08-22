@@ -3,13 +3,13 @@ import { apiCall } from "@/lib/apiClient";
 import { useToastStore } from "@/store/toastStore";
 
 export interface SettingData {
-  companyName: string;
-  domainName: string;
-  email: string;
-  phone: string;
-  address: string;
-  description: string;
-  showCurrency: boolean;
+  companyName?: string;
+  domainName?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  description?: string;
+  showCurrency?: boolean;
   registrationLink?: string;
   documents?: { name: string; url: string }[];
   mapEmbed?: string;
@@ -21,7 +21,7 @@ interface SettingState {
   error: string | null;
 
   fetchSettings: () => Promise<{ success: boolean; setting?: SettingData; error?: string }>;
-  updateSettings: (data: SettingData) => Promise<{ success: boolean; setting?: SettingData; error?: string }>;
+  updateSettings: (data: Partial<SettingData>) => Promise<{ success: boolean; setting?: SettingData; error?: string }>;
   clearError: () => void;
 }
 
