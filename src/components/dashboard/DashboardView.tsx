@@ -155,8 +155,9 @@ function DashboardContent({ tab }: { tab: string }) {
  
   
 
-  // Earnings tracking states
+  // Earnings & Active Deposits tracking states
   const [earningsList, setEarningsList] = useState<any[]>([]);
+  const [activeDepositsList, setActiveDepositsList] = useState<any[]>([]);
 
   const fetchEarnings = async () => {
     if (!username) return;
@@ -172,24 +173,30 @@ function DashboardContent({ tab }: { tab: string }) {
     }
   };
 
-
-
-
-
-
-
+  const fetchActiveDeposits = async () => {
+    if (!username) return;
+    try {
+      const response = await apiCall<{ success: boolean; activeDeposits: any[]; totalActiveDepositAmount?: number }>(
+        `/api/users/active-deposits?username=${username}`
+      );
+      if (response.success) {
+        setActiveDepositsList(response.activeDeposits || []);
+      }
+    } catch (error) {
+      console.error("✗ Failed to load active deposits:", error);
+    }
+  };
 
   // Fetch wallets on mount / username load
   useEffect(() => {
     if (username) {
       fetchWallets();
       fetchEarnings();
+      fetchActiveDeposits();
     } else {
       setLoadingWallets(false);
     }
   }, [username, tab]);
-
-
 
   const showToast = (message: string, type: "success" | "warning" = "success") => {
     setToastMessage(message);
@@ -198,8 +205,6 @@ function DashboardContent({ tab }: { tab: string }) {
       setToastMessage(null);
     }, 4000);
   };
-
-
 
   const fetchWallets = async () => {
     try {
@@ -219,7 +224,14 @@ function DashboardContent({ tab }: { tab: string }) {
 
   // User Total Balance from profile / user model
   const totalBalance = profile?.totalBalance ?? user?.totalBalance ?? profile?.balance ?? user?.balance ?? 0;
-  const activeDeposits = wallets.reduce((acc, curr) => acc + (Number(curr.activeDeposit) || 0), 0);
+  
+  // Sum of all running active deposits made by the user
+  const runningActiveDepositSum = activeDepositsList
+    .filter((d: any) => d.daysRemaining === undefined || d.daysRemaining > 0)
+    .reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0);
+  const activeDeposits = activeDepositsList.length > 0
+    ? runningActiveDepositSum
+    : wallets.reduce((acc, curr) => acc + (Number(curr.activeDeposit) || 0), 0);
   const totalDeposits = wallets.reduce((acc, curr) => acc + (Number(curr.totalDeposit) || 0), 0);
 
   const totalWithdrawals = storeTransactions

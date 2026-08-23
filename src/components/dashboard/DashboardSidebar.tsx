@@ -22,10 +22,15 @@ function SidebarNav() {
 
   useEffect(() => {
     if (username) {
-      apiCall<{ success: boolean; wallets: any[] }>(`/api/users/wallets?username=${username}`)
+      apiCall<{ success: boolean; activeDeposits?: any[]; wallets?: any[] }>(`/api/users/active-deposits?username=${username}`)
         .then((res) => {
-          if (res.success && res.wallets) {
-            const sum = res.wallets.reduce((acc, curr) => acc + (curr.activeDeposit || 0), 0);
+          if (res.success && Array.isArray(res.activeDeposits)) {
+            const sum = res.activeDeposits
+              .filter((d: any) => d.daysRemaining === undefined || d.daysRemaining > 0)
+              .reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0);
+            setActiveDeposits(sum);
+          } else if (res.success && Array.isArray(res.wallets)) {
+            const sum = res.wallets.reduce((acc, curr) => acc + (Number(curr.activeDeposit) || 0), 0);
             setActiveDeposits(sum);
           }
         })

@@ -13,6 +13,7 @@ export function EarningsTab() {
   const { transactions, fetchTransactions } = useTransactionStore();
 
   const [earningsList, setEarningsList] = useState<any[]>([]);
+  const [activeDepositsList, setActiveDepositsList] = useState<any[]>([]);
 
   useEffect(() => {
     if (username) {
@@ -31,12 +32,30 @@ export function EarningsTab() {
           console.error("✗ Failed to load earnings:", error);
         }
       };
+
+      const fetchActiveDeposits = async () => {
+        try {
+          const response = await apiCall<{ success: boolean; activeDeposits: any[] }>(
+            `/api/users/active-deposits?username=${username}`
+          );
+          if (response.success) {
+            setActiveDepositsList(response.activeDeposits || []);
+          }
+        } catch (error) {
+          console.error("✗ Failed to load active deposits:", error);
+        }
+      };
       
       fetchEarnings();
+      fetchActiveDeposits();
     }
   }, [username, fetchWallets, fetchTransactions]);
 
-  const activeDeposits = wallets.reduce((acc, curr) => acc + (curr.activeDeposit || 0), 0);
+  const activeDeposits = activeDepositsList.length > 0
+    ? activeDepositsList
+        .filter((d: any) => d.daysRemaining === undefined || d.daysRemaining > 0)
+        .reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0)
+    : wallets.reduce((acc, curr) => acc + (Number(curr.activeDeposit) || 0), 0);
   const totalEarnings = earningsList.reduce((acc, e) => acc + (e.earning || 0), 0);
   const totalWithdrawals = transactions
     .filter((t) => t.transactionType === "withdrawal")
