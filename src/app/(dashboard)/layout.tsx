@@ -57,9 +57,7 @@ export default function DashboardLayout({
     }
   }, [isAuthenticated, username, connectSocket, fetchNotifications, fetchUserWallets, fetchProfile]);
 
-  const displayTotalBalance = walletTotalBalance > 0
-    ? walletTotalBalance
-    : (profile?.totalBalance ?? profile?.balance ?? user?.totalBalance ?? user?.balance ?? 0);
+  const displayTotalBalance = profile?.totalBalance ?? user?.totalBalance ?? profile?.balance ?? user?.balance ?? 0;
 
   if (!isHydrated || !isAuthenticated) return null;
 

@@ -3,7 +3,6 @@ import React from "react";
 
 export function MetricCardsGrid({
   totalBalance,
-  walletsLabel,
   activeDeposits,
   totalDeposits,
   totalWithdrawals,
@@ -11,7 +10,7 @@ export function MetricCardsGrid({
   totalEarnings
 }: {
   totalBalance: number;
-  walletsLabel: string;
+  walletsLabel?: string;
   activeDeposits: number;
   totalDeposits: number;
   totalWithdrawals: number;
@@ -21,7 +20,7 @@ export function MetricCardsGrid({
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       
-      {/* Card 1: Total Balance from N wallets */}
+      {/* Card 1: Total Balance */}
       <div className="bg-[#0f1115] border border-neutral-900 p-6 rounded relative overflow-hidden group">
         <div className="absolute top-0 left-0 w-1 h-full bg-[#e4c126]" />
         <span className="text-[10px] font-extrabold uppercase tracking-wider text-neutral-500 block mb-3">
@@ -31,7 +30,7 @@ export function MetricCardsGrid({
           ${(totalBalance || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </h4>
         <span className="text-[10px] font-bold text-[#e4c126] bg-[#e4c126]/10 px-2 py-0.5 rounded inline-block mt-2">
-          Aggregated from {walletsLabel}
+          Available Balance
         </span>
       </div>
 

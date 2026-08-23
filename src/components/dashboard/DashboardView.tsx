@@ -217,14 +217,8 @@ function DashboardContent({ tab }: { tab: string }) {
     }
   };
 
-  // Calculations across wallets
-  const numWallets = wallets.length;
-  const walletsLabel = numWallets === 1 ? "1 Wallet" : `${numWallets} Wallets`;
-
-  const totalFromWallets = wallets.reduce((acc, curr) => acc + (Number(curr.balance) || 0), 0);
-  const totalBalance = wallets.length > 0
-    ? totalFromWallets
-    : (profile?.totalBalance ?? profile?.balance ?? user?.totalBalance ?? user?.balance ?? 0);
+  // User Total Balance from profile / user model
+  const totalBalance = profile?.totalBalance ?? user?.totalBalance ?? profile?.balance ?? user?.balance ?? 0;
   const activeDeposits = wallets.reduce((acc, curr) => acc + (Number(curr.activeDeposit) || 0), 0);
   const totalDeposits = wallets.reduce((acc, curr) => acc + (Number(curr.totalDeposit) || 0), 0);
 
@@ -466,7 +460,7 @@ function DashboardContent({ tab }: { tab: string }) {
                 </button>
               </div>
               <span className="text-[10px] font-bold text-[#e4c126] bg-[#e4c126]/10 px-2 py-0.5 rounded inline-block mt-2">
-                {numWallets > 0 ? `Aggregated from ${walletsLabel}` : "Portfolio Balance"}
+                Available Balance
               </span>
             </div>
 
