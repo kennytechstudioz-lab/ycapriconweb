@@ -62,6 +62,7 @@ export default function AdminStaffPage() {
     setForm(emptyForm);
     setImageFile(null);
     setImagePreview("");
+    if (fileInputRef.current) fileInputRef.current.value = "";
     setModalOpen(true);
   };
 
@@ -75,6 +76,7 @@ export default function AdminStaffPage() {
     });
     setImageFile(null);
     setImagePreview(member.picture || "");
+    if (fileInputRef.current) fileInputRef.current.value = "";
     setModalOpen(true);
   };
 
@@ -91,12 +93,17 @@ export default function AdminStaffPage() {
     try {
       const fd = new FormData();
       fd.append("file", imageFile);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/upload`, {
+      const res = await apiCall<{ success: boolean; url: string }>("/api/upload", {
         method: "POST",
         body: fd,
       });
-      const data = await res.json();
-      return data.url || form.picture;
+      if (res && res.url) {
+        return res.url;
+      }
+      return form.picture;
+    } catch (err: any) {
+      console.error("Staff image upload error:", err);
+      throw new Error(err.message || "Failed to upload image to server.");
     } finally {
       setUploading(false);
     }
@@ -109,8 +116,16 @@ export default function AdminStaffPage() {
     }
     setSubmitting(true);
     try {
-      const pictureUrl = await uploadImage();
-      const payload = { ...form, picture: pictureUrl };
+      let pictureUrl = form.picture;
+      if (imageFile) {
+        pictureUrl = await uploadImage();
+      }
+      const payload = {
+        name: form.name.trim(),
+        position: form.position.trim(),
+        description: form.description.trim(),
+        picture: pictureUrl,
+      };
 
       if (editTarget) {
         const res = await apiCall<{ success: boolean; staff: StaffMember }>(`/api/staff/${editTarget._id}`, {
@@ -132,6 +147,7 @@ export default function AdminStaffPage() {
       showToast(err.message || "Failed to save staff member.", "error");
     } finally {
       setSubmitting(false);
+      setUploading(false);
     }
   };
 

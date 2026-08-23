@@ -98,20 +98,15 @@ export default function CurrenciesAdminPage() {
     formData.append("file", file);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/upload`, {
+      const result = await apiCall<{ success: boolean; url: string }>("/api/upload", {
         method: "POST",
         body: formData,
       });
 
-      if (!response.ok) {
-        throw new Error("HTTP connection error uploading currency icon.");
-      }
-
-      const result = await response.json();
       if (result.success && result.url) {
         setImage(result.url);
       } else {
-        throw new Error(result.error || "Failed to receive S3 image address.");
+        throw new Error("Failed to receive image URL from server.");
       }
     } catch (err: any) {
       console.error("✗ S3 Image Upload Error:", err);
