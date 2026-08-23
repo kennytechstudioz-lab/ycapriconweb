@@ -4,15 +4,16 @@ import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 
 interface StatItem {
+  prefix?: string;
   target: number;
   suffix: string;
   label: string;
 }
 
 const stats: StatItem[] = [
-  { target: 10, suffix: "+", label: "Years of Experience" },
-  { target: 13, suffix: "", label: "Offices Worldwide" },
-  { target: 17, suffix: "K", label: "Investors Served" },
+  { prefix: "+", target: 18, suffix: "", label: "Years of Experience" },
+  { target: 20, suffix: "", label: "Offices Worldwide" },
+  { prefix: "", target: 1, suffix: "+ Million", label: "Investors Served" },
 ];
 
 function useCountUp(target: number, triggered: boolean, duration = 1800) {
@@ -42,14 +43,14 @@ function StatCard({ stat, triggered }: { stat: StatItem; triggered: boolean }) {
   const count = useCountUp(stat.target, triggered);
   return (
     <div
-      className="relative p-4 sm:p-5 rounded border border-neutral-200/50 shadow-sm overflow-hidden bg-white hover:shadow-md transition-shadow group"
+      className="relative p-3.5 sm:p-5 rounded border border-neutral-200/50 shadow-sm overflow-hidden bg-white hover:shadow-md transition-shadow group"
       style={{
         background: `repeating-linear-gradient(45deg, rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 1.5px, transparent 1.5px, transparent 10px), #ffffff`,
       }}
     >
-      <div className="flex flex-col gap-2 relative z-10">
-        <span className="text-2xl sm:text-3xl font-black text-[#528574] group-hover:scale-105 transition-transform duration-300 origin-left inline-block tabular-nums">
-          {count}{stat.suffix}
+      <div className="flex flex-col gap-1.5 sm:gap-2 relative z-10">
+        <span className="text-xl sm:text-2xl md:text-3xl font-black text-[#528574] group-hover:scale-105 transition-transform duration-300 origin-left inline-block tabular-nums whitespace-nowrap">
+          {stat.prefix || ""}{count}{stat.suffix}
         </span>
         <span className="text-[10px] sm:text-xs font-black text-neutral-900 leading-tight">
           {stat.label}
@@ -91,7 +92,7 @@ export default function WorldMapSection() {
             </h3>
 
             <p className="text-sm sm:text-base text-neutral-600 leading-relaxed max-w-xl">
-              Capricorn Energy Limited operates globally with offices across North America, South Africa, and Europe — bringing institutional-grade investment opportunities to investors worldwide and continuously expanding our reach into high-growth markets.
+              Capricorn Energy Limited operates globally with 20 offices across North America, South Africa, and Europe — bringing institutional-grade investment opportunities to 1+ million investors worldwide with +18 years of proven industry experience.
             </p>
 
             {/* Statistics Cards Row */}
