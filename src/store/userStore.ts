@@ -7,6 +7,7 @@ export interface UserProfile {
   email: string;
   role: string;
   status: string;
+  totalBalance?: number;
   balance: number;
   passKey: string;
   profilePicture: string;

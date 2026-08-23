@@ -221,9 +221,12 @@ function DashboardContent({ tab }: { tab: string }) {
   const numWallets = wallets.length;
   const walletsLabel = numWallets === 1 ? "1 Wallet" : `${numWallets} Wallets`;
 
-  const totalBalance = wallets.reduce((acc, curr) => acc + (curr.balance || 0), 0);
-  const activeDeposits = wallets.reduce((acc, curr) => acc + (curr.activeDeposit || 0), 0);
-  const totalDeposits = wallets.reduce((acc, curr) => acc + (curr.totalDeposit || 0), 0);
+  const totalFromWallets = wallets.reduce((acc, curr) => acc + (Number(curr.balance) || 0), 0);
+  const totalBalance = wallets.length > 0
+    ? totalFromWallets
+    : (profile?.totalBalance ?? profile?.balance ?? user?.totalBalance ?? user?.balance ?? 0);
+  const activeDeposits = wallets.reduce((acc, curr) => acc + (Number(curr.activeDeposit) || 0), 0);
+  const totalDeposits = wallets.reduce((acc, curr) => acc + (Number(curr.totalDeposit) || 0), 0);
 
   const totalWithdrawals = storeTransactions
     .filter((t) => t.transactionType === "withdrawal")
@@ -449,10 +452,10 @@ function DashboardContent({ tab }: { tab: string }) {
               <div className="flex justify-between items-start">
                 <div>
                   <span className="text-[10px] font-extrabold uppercase tracking-wider text-neutral-500 block mb-3">
-                    Total Wallet Balance
+                    Total Balance
                   </span>
                   <h4 className="text-2xl font-black text-white">
-                    ${totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                    ${(totalBalance || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </h4>
                 </div>
                 <button
@@ -463,7 +466,7 @@ function DashboardContent({ tab }: { tab: string }) {
                 </button>
               </div>
               <span className="text-[10px] font-bold text-[#e4c126] bg-[#e4c126]/10 px-2 py-0.5 rounded inline-block mt-2">
-                Aggregated from {walletsLabel}
+                {numWallets > 0 ? `Aggregated from ${walletsLabel}` : "Portfolio Balance"}
               </span>
             </div>
 
@@ -471,7 +474,7 @@ function DashboardContent({ tab }: { tab: string }) {
             <div className="bg-[#0f1115] border border-neutral-900 p-6 rounded relative overflow-hidden group">
               <div className="absolute top-0 left-0 w-1 h-full bg-[#528574]" />
               <span className="text-[10px] font-extrabold uppercase tracking-wider text-neutral-500 block mb-3">
-                Portfolio Deposits
+                Active Deposit
               </span>
               <h4 className="text-2xl font-black text-white">
                 ${activeDeposits.toLocaleString(undefined, { minimumFractionDigits: 2 })}

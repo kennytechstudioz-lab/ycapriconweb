@@ -17,6 +17,7 @@ export interface WalletItem {
 
 interface WalletState {
   wallets: WalletItem[];
+  totalBalance: number;
   isLoading: boolean;
   error: string | null;
 
@@ -27,6 +28,7 @@ interface WalletState {
 
 export const useWalletStore = create<WalletState>((set, get) => ({
   wallets: [],
+  totalBalance: 0,
   isLoading: false,
   error: null,
 
@@ -35,12 +37,18 @@ export const useWalletStore = create<WalletState>((set, get) => ({
     
     set({ isLoading: true, error: null });
     try {
-      const response = await apiCall<{ success: boolean; wallets: WalletItem[] }>(
+      const response = await apiCall<{ success: boolean; wallets: WalletItem[]; totalBalance?: number }>(
         `/api/users/wallets?username=${username}`
       );
       if (response.success) {
+        const walletList = response.wallets || [];
+        const computedTotal = typeof response.totalBalance === "number"
+          ? response.totalBalance
+          : walletList.reduce((sum, w) => sum + (Number(w.balance) || 0), 0);
+
         set({
-          wallets: response.wallets || [],
+          wallets: walletList,
+          totalBalance: computedTotal,
           isLoading: false,
           error: null,
         });

@@ -12,8 +12,8 @@ import PageLoader from "@/components/PageLoader";
 import GoogleTranslate from "@/components/GoogleTranslate";
 
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
-
-
+import { useWalletStore } from "@/store/walletStore";
+import { useUserStore } from "@/store/userStore";
 
 export default function DashboardLayout({
   children,
@@ -23,6 +23,8 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const { isAuthenticated, user, logout } = useAuthStore();
   const username = user?.username;
+  const { wallets, totalBalance: walletTotalBalance, fetchWallets: fetchUserWallets } = useWalletStore();
+  const { profile, fetchProfile } = useUserStore();
   const router = useRouter();
   const [isHydrated, setIsHydrated] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -50,8 +52,14 @@ export default function DashboardLayout({
     if (isAuthenticated && username) {
       connectSocket(username);
       fetchNotifications(username);
+      fetchUserWallets(username);
+      fetchProfile(username);
     }
-  }, [isAuthenticated, username, connectSocket, fetchNotifications]);
+  }, [isAuthenticated, username, connectSocket, fetchNotifications, fetchUserWallets, fetchProfile]);
+
+  const displayTotalBalance = walletTotalBalance > 0
+    ? walletTotalBalance
+    : (profile?.totalBalance ?? profile?.balance ?? user?.totalBalance ?? user?.balance ?? 0);
 
   if (!isHydrated || !isAuthenticated) return null;
 
@@ -89,6 +97,13 @@ export default function DashboardLayout({
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Executive Balance Display */}
+            <div className="flex items-center gap-2 bg-[#13151a] border border-neutral-800 rounded-lg px-3 py-1.5 mr-1">
+              <span className="text-[10px] text-neutral-400 font-extrabold uppercase tracking-wider hidden sm:inline">Total Balance:</span>
+              <span className="text-xs sm:text-sm font-black text-[#e4c126]">
+                ${displayTotalBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </span>
+            </div>
             {/* Notification bell */}
             <button 
               onClick={() => router.push("/dashboard/notifications")}

@@ -9,6 +9,7 @@ interface UserProfile {
   email: string;
   role: "user" | "staff";
   status: "Active" | "Suspended";
+  totalBalance?: number;
   balance: number;
   passKey: string;
   createdAt: string;
@@ -613,7 +614,7 @@ export default function AdminUsersPage() {
                         )}
                       </td>
                       <td className="px-6 py-4 text-white font-extrabold">
-                        ${user.balance.toFixed(2)}
+                        ${((user.totalBalance ?? user.balance) || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
                       <td className="px-6 py-4">
                         {/* Registration Date Column: Stacked Time above Date */}
@@ -1147,8 +1148,8 @@ export default function AdminUsersPage() {
                   <span className="text-white font-semibold break-all">{verifUser.email}</span>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <span className="text-[10px] text-neutral-500 uppercase tracking-wider font-extrabold">Balance</span>
-                  <span className="text-[#e4c126] font-extrabold">${verifUser.balance.toFixed(2)}</span>
+                  <span className="text-[10px] text-neutral-500 uppercase tracking-wider font-extrabold">Total Balance</span>
+                  <span className="text-[#e4c126] font-extrabold">${((verifUser.totalBalance ?? verifUser.balance) || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
                 <div className="flex flex-col gap-1">
                   <span className="text-[10px] text-neutral-500 uppercase tracking-wider font-extrabold">Status</span>
@@ -1341,7 +1342,7 @@ export default function AdminUsersPage() {
                 </div>
                 <div className="flex flex-col gap-1">
                   <span className="text-[10px] text-neutral-500 uppercase tracking-wider font-extrabold">Total Balance</span>
-                  <span className="text-sm font-extrabold text-[#e4c126]">${selectedUserForDetails.balance.toFixed(2)}</span>
+                  <span className="text-sm font-extrabold text-[#e4c126]">${((selectedUserForDetails.totalBalance ?? selectedUserForDetails.balance) || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
               </div>
 
