@@ -239,7 +239,7 @@ export default function AdminUsersPage() {
   // Open create transaction modal and fetch user wallets + plans
   const openCreateTxn = async (user: UserProfile) => {
     setCreateTxnUser(user);
-    setTxnForm({ transactionType: "deposit", amount: "", currencySymbol: "", method: "direct", planId: "" });
+    setTxnForm({ transactionType: "funding", amount: "", currencySymbol: "", method: "direct", planId: "" });
     setLoadingUserWallets(true);
     try {
       const [walletsRes, plansRes] = await Promise.all([
@@ -273,12 +273,20 @@ export default function AdminUsersPage() {
       showToast("Transaction created successfully.", "success");
       const isDeposit = txnForm.transactionType === "deposit";
       const isFromBalance = txnForm.method === "balance";
-      const isCredit = ["bonus", "referral"].includes(txnForm.transactionType) || (isDeposit && !isFromBalance);
+      const isCredit = ["bonus", "referral", "funding"].includes(txnForm.transactionType);
       const isDebit = ["withdrawal", "reduction"].includes(txnForm.transactionType) || (isDeposit && isFromBalance);
       setUsers((prev) =>
         prev.map((u) =>
           u.username === createTxnUser.username
-            ? { ...u, balance: isCredit ? u.balance + amountVal : isDebit ? u.balance - amountVal : u.balance }
+            ? {
+                ...u,
+                balance: isCredit ? (u.balance || 0) + amountVal : isDebit ? Math.max(0, (u.balance || 0) - amountVal) : u.balance,
+                totalBalance: isCredit
+                  ? ((u.totalBalance ?? u.balance) || 0) + amountVal
+                  : isDebit
+                  ? Math.max(0, ((u.totalBalance ?? u.balance) || 0) - amountVal)
+                  : u.totalBalance,
+              }
             : u
         )
       );
@@ -1035,10 +1043,11 @@ export default function AdminUsersPage() {
                   onChange={(e) => setTxnForm((f) => ({ ...f, transactionType: e.target.value }))}
                   className="bg-neutral-950 border border-neutral-800 p-2.5 rounded text-white text-sm focus:outline-none focus:border-[#e4c126] font-medium"
                 >
-                  <option value="deposit">Deposit</option>
-                  <option value="withdrawal">Withdrawal</option>
-                  <option value="bonus">Bonus</option>
-                  <option value="reduction">Reduction</option>
+                  <option value="funding">Funding (Credit Balance)</option>
+                  <option value="deposit">Deposit (Investment Plan)</option>
+                  <option value="bonus">Bonus (Credit Balance)</option>
+                  <option value="withdrawal">Withdrawal (Deduct Balance)</option>
+                  <option value="reduction">Reduction (Silent Deduction)</option>
                 </select>
               </div>
               {/* Plan — only for deposit */}
